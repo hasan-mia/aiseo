@@ -20,20 +20,26 @@
       });
 
       // Define the API endpoint for rewriting
-      const rewriteEndpoint = 'https://example.com/rewrite';
+      const rewriteEndpoint = 'http://localhost:8080/fake';
 
       // Define a function for sending the rewrite request to the API
       async function rewriteText() {
         const data = await editor.save();
-        const text = data.blocks.map(block => block.text).join('\n');
+        const text = data.blocks.map(block => block.data.text);
+        // console.log(typeof text[0])
+        const value = {
+          "name": "rhso"
+        }
+      
         const response = await fetch(rewriteEndpoint, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ text })
+          body: (value)
         });
         const rewrittenText = await response.json();
+        console.log(rewrittenText)
         document.getElementById('rewritten-text').innerText = rewrittenText;
       }
 
