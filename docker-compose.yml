@@ -1,0 +1,12 @@
+version: "3.7"
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - FIREBASE_PROJECT_ID=<your-project-id>
+      - FIREBASE_SERVICE_ACCOUNT_KEY_PATH=/app/service-account.json
+    volumes:
+      - .:/app
+    command: npm run dev
