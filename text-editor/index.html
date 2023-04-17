@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Editor</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
+</head>
+<body>
+    <div id="editorjs" contenteditable class="cdx-input" data-placeholder="Custom placeholder"></div>
+    <button id="rewrite-btn">Rewrite</button>
+    <div id="rewritten-text"></div>
+    <script>
+      // Initialize the Editor JS instance
+      const editor = new EditorJS({
+        holder: 'editorjs',
+        tools: {},
+      });
+
+      // Define the API endpoint for rewriting
+      const rewriteEndpoint = 'https://example.com/rewrite';
+
+      // Define a function for sending the rewrite request to the API
+      async function rewriteText() {
+        const data = await editor.save();
+        const text = data.blocks.map(block => block.text).join('\n');
+        const response = await fetch(rewriteEndpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ text })
+        });
+        const rewrittenText = await response.json();
+        document.getElementById('rewritten-text').innerText = rewrittenText;
+      }
+
+      // Add an event listener to the rewrite button
+      document.getElementById('rewrite-btn').addEventListener('click', rewriteText);
+    </script>
+  </body>
+</html>
